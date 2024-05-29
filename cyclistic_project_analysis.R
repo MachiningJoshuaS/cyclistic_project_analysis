@@ -146,11 +146,16 @@ cat("Number of rows with at least one null value:", null_count, "\n")
 # the "electric_bike" rideable type. So I am going to remove those columns.
 # As for columns with irrelevant information (ride_id, start_station_name, start_station_id,
 # end_station_name, end_station_id, start_lat, start_lng, end_lat, end_lng),
-# they are not pertinent to my business task. I am going to remove those rows as well.
+# they are not pertinent to my business task. I am going to remove these columns as well
 
-all_trips <- all_trips %>% filter(!is.na(rideable_type))
- 
-all_trips <- select(all_trips, -c(ride_id, start_station_name, start_station_id, end_station_name, end_station_id, start_lat, start_lng, end_lat, end_lng))
+# putting the columns I'm removing into a different data frame and using subset to remove them from all_trips
+removed_columns <- all_trips[, c("start_station_name", "start_station_id",
+                                 "end_station_name", "end_station_id",
+                                 "start_lat", "end_lat", "start_lng", "end_lng")]
+
+all_trips <- subset(all_trips, select =
+                      -c(start_station_name, start_station_id, end_station_name,
+                         end_station_id, end_lat, end_lng, start_lat, start_lng))
  
 # Going to remove rows with trip_duration less than or equal to 0.
 all_trips <- all_trips[!(all_trips$trip_duration <= 0),]
